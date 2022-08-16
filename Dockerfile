@@ -6,14 +6,17 @@ COPY ./cypress ./cypress
 COPY ./cypress.config.js ./cypress.config.js
 
 # RUN apk --no-cache add curl libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-RUN apk --no-cache add wget curl gtk+3.0-dev libnotify xvfb nss libxscrnsaver alsa-lib xkbcomp
+RUN apk --no-cache add wget curl gtk+3.0-dev libnotify xvfb nss libxscrnsaver alsa-lib glib-dev musl xauth libxtst xkbcomp
+RUN apk add xauth xvfb libxtst alsa-lib-dev libxscrnsaver nss libnotify-dev mesa-gbm gtk+3.0 gtk+2.0 gcompat
+# gcompat
+# useless ffmpeg-libs
 
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.11/main" >> /etc/apk/repositories
 RUN apk --no-cache add gconf
 
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
-    apk add glibc-2.35-r0.apk
+# RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+#     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
+#     apk add glibc-2.35-r0.apk
 
 # install Chrome browser
 # RUN apk add chromium
@@ -54,7 +57,11 @@ RUN echo "whoami: $(whoami)" \
   && npm install -g typescript \
   && npm install -g "cypress@10.5.0"
 
+# RUN cd /root/.cache/Cypress/10.5.0/Cypress/ && ldd ./Cypress
+
 # RUN cypress verify
+# RUN npx cypress run --spec "cypress/e2e/1-getting-started/todo.cy.js"
+# RUN yarn cypress run --browser /usr/bin/chromium-browser
 
 # RUN (node -p "process.env.CI_XBUILD && process.arch === 'arm64' ? 'Skipping cypress verify on arm64 due to SIGSEGV.' : process.exit(1)" \
 #     || (cypress verify \
